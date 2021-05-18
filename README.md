@@ -1,6 +1,6 @@
-# Arbeitsrepository für physics informed neural networks (PINNs)
+# Some Python files for physics-informed machine learning for AM
 
 ## Packages
 
 - `tensorflow`
-- `DeepXDE`
+- [`DeepXDE`](https://github.com/lululxvi/deepxde)
