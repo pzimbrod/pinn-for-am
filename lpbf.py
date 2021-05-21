@@ -17,16 +17,16 @@ def main():
     dx = 2
     dy = 0.3
     dz = 0.5
-    dt = 2e-3
+    dt = 2e-3 # The end time
 
     def pde(x, u, alpha):
-        u_vel, v_vel, w_vel, p = u[:, 0:1], u[:, 1:2], u[:, 2:3], u[:, 3:4]
+        u_vel, v_vel, w_vel, p, alpha = u[:, 0:1], u[:, 1:2], u[:, 2:3], u[:, 3:4], u[:, 4:5]
 
         # Define the (partial) derivatives of the variables in a way that tensorflow understands
         # We query corresponding entries of the jacobian and hessian and map them to new variables
 
         # u
-        # First derivatives 
+        # First derivatives
         u_vel_x = dde.grad.jacobian(u, x, i=0, j=0)
         u_vel_y = dde.grad.jacobian(u, x, i=0, j=1)
         u_vel_z = dde.grad.jacobian(u, x, i=0, j=2)
@@ -63,6 +63,12 @@ def main():
         p_y = dde.grad.jacobian(u, x, i=3, j=1)
         p_z = dde.grad.jacobian(u, x, i=3, j=2)
 
+        # volume fraction
+        alpha_x = dde.grad.jacobian(u, x, i=4, j=0)
+        alpha_y = dde.grad.jacobian(u, x, i=4, j=1)
+        alpha_z = dde.grad.jacobian(u, x, i=4, j=2)
+        alpha_t = dde.grad.jacobian(u, x, i=4, j=3)
+
         # Assemble the momentum equations
         momentum_x = (
             u_vel_t
@@ -85,7 +91,10 @@ def main():
         # Assemble continuity equation
         continuity = u_vel_x + v_vel_y + w_vel_z
 
-        return [momentum_x, momentum_y, momentum_z, continuity]
+        # Assemble the VoF equation
+        alphaEqn = alpha_t + u_vel * alpha_x + v_vel * alpha_y + w_vel * alpha_z
+
+        return [momentum_x, momentum_y, momentum_z, continuity, alphaEqn]
 
     # Make a simple cubic domain
     spatial_domain = dde.geometry.Cuboid(xmin=[0, 0, 0], xmax=[dx, dy, dz])
