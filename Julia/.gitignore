@@ -1,0 +1,14 @@
+*.jl.*.cov
+*.jl.cov
+*.jl.mem
+/Manifest.toml
+.vscode/
+benchmarks/Manifest.toml
+
+# No test files
+*.mat
+
+# No plots and images
+*.png
+*.gif
+*.mov
