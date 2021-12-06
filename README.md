@@ -1,6 +1,12 @@
-# Some Python files for physics-informed machine learning for AM
+# Some Python and Julia files for physics-informed machine learning for AM
 
-## Packages
+## The Python Side
 
 - `tensorflow`
 - [`DeepXDE`](https://github.com/lululxvi/deepxde)
+
+## The Julia Side
+
+- `Flux`
+- `NeuralPDE`
+- `ModelingToolkit`
