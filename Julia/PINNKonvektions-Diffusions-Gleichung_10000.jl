@@ -40,9 +40,8 @@ chain = FastChain(FastDense(2,inner,Flux.relu),
                   FastDense(inner,inner,Flux.relu),
                   FastDense(inner,1))
 
-#### Welches Verfahren?
-#### CuArray(Float64 ....)
-initθ = Float64.(DiffEqFlux.initial_params(chain))
+
+initθ = CuArray(Float64.(DiffEqFlux.initial_params(chain)))
 
 strategy = GridTraining(1/64)
 
@@ -57,4 +56,4 @@ cb = function (p,l)
     return false
 end
 
-res = GalacticOptim.solve(prob,ADAM(0.001);cb=cb,maxiters=2)
+res = GalacticOptim.solve(prob,ADAM(0.001);cb=cb,maxiters=10000)
