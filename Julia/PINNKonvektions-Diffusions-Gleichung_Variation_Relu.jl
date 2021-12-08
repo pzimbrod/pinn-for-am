@@ -70,6 +70,7 @@ end
 
 
 for inner in inner_array
+    println("Prozess startet mit $(inner)!")
 
     #2 hidden layer
     chain1 = FastChain(FastDense(2,inner,act_Fkt),
@@ -77,7 +78,7 @@ for inner in inner_array
                   FastDense(inner,1))
     create_PINN(eq, bcs, domains, chain1, inner, 2)
 
-    print("Beendet: Anzahl Inner Layer $(inner) und 2 hidden Layer")
+    println("Beendet: Anzahl Inner Layer $(inner) und 2 hidden Layer")
 
 
     #4 hidden layer
@@ -88,7 +89,7 @@ for inner in inner_array
                   FastDense(inner,1))
     create_PINN(eq, bcs, domains, chain1, inner, 4)
     
-    print("Beendet: Anzahl Inner Layer $(inner) und 4 hidden Layer")
+    println("Beendet: Anzahl Inner Layer $(inner) und 4 hidden Layer")
 
     #6 hidden layer
     chain3 = FastChain(FastDense(2,inner,act_Fkt),
@@ -100,7 +101,7 @@ for inner in inner_array
                   FastDense(inner,1))
     create_PINN(eq, bcs, domains, chain1, inner, 6)
 
-    print("Beendet: Anzahl Inner Layer $(inner) und 6 hidden Layer")
+    println("Beendet: Anzahl Inner Layer $(inner) und 6 hidden Layer")
 
 end
 
