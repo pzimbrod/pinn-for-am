@@ -7,5 +7,5 @@
 [submomdule "dgtest"]
 	url = https://github.com/pzimbrod/dgtest.git
 	path = dgtest
-	branch = master
+	branch = main
 	update = merge
