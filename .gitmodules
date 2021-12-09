@@ -1,7 +1,11 @@
 [submodule "deeponet"]
 	url = https://github.com/pzimbrod/deeponet
 	path = deeponet
+	branch = master
+	update = merge
 
 [submomdule "dgtest"]
 	url = https://github.com/pzimbrod/dgtest
 	path = dgtest
+	branch = master
+	update = merge
