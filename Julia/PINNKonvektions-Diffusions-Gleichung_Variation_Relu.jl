@@ -8,7 +8,6 @@ import ModelingToolkit: Interval
 Dxx = Differential(x)^2
 Dyy = Differential(y)^2
 Dx = Differential(x)
-Dy = Differential(y)
 
 x_min = 0.
 x_max = 1.
@@ -52,16 +51,20 @@ function create_PINN(eq, bcs, domains, chain, inner, hidden)
 
     cb = function (p,l)
         #println("Current loss is: $l") 
-        #csv Datei befüllen
         push!(Loss, l)
-        return false
+        if l < 1e-5
+            return true
+        else
+            return false
+        end
+        
     end
 
-    GalacticOptim.solve(prob,ADAM(0.001);cb=cb,maxiters=10000, reltol = 10^-5)
+    GalacticOptim.solve(prob,ADAM(0.001);cb=cb,maxiters=10000)
 
 
     #CSV-Datei erstellen
-    name = "/home/pi/stolzean/ErgebnissePINN/PINN_Relu_nodes$(inner)_hidden$(hidden).csv"
+    name = "/home/pi/stolzean/ErgebnissePINNs/PINN_Relu_nodes$(inner)_hidden$(hidden).csv"
     writedlm(name, Loss, ',') 
 
 end
