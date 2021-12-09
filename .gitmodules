@@ -1,3 +1,7 @@
 [submodule "deeponet"]
 	url = https://github.com/pzimbrod/deeponet
 	path = deeponet
+
+[submomdule "dgtest"]
+	url = https://github.com/pzimbrod/dgtest
+	path = dgtest
