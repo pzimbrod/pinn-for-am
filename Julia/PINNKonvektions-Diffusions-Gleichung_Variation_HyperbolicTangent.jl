@@ -89,7 +89,7 @@ for inner in inner_array
                   FastDense(inner,inner,act_Fkt),
                   FastDense(inner,inner,act_Fkt),
                   FastDense(inner,1))
-    create_PINN(eq, bcs, domains, chain1, inner, 4)
+    create_PINN(eq, bcs, domains, chain2, inner, 4)
     
     print("Beendet: Anzahl Inner Layer $(inner) und 4 hidden Layer")
 
@@ -102,7 +102,7 @@ for inner in inner_array
                   FastDense(inner,inner,act_Fkt),
                   FastDense(inner,inner,act_Fkt),
                   FastDense(inner,1))
-    create_PINN(eq, bcs, domains, chain1, inner, 6)
+    create_PINN(eq, bcs, domains, chain3, inner, 6)
 
     print("Beendet: Anzahl Inner Layer $(inner) und 6 hidden Layer")
 
