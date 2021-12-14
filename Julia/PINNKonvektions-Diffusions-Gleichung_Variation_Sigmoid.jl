@@ -72,15 +72,14 @@ end
 
 
 for inner in inner_array
-    println("Prozess startet mit $(inner)!")
+    println("Sigmoid: Prozess startet mit $(inner)!")
 
     #2 hidden layer
     chain1 = FastChain(FastDense(2,inner,act_Fkt),
                   FastDense(inner,inner,act_Fkt),
                   FastDense(inner,1))
-    create_PINN(eq, bcs, domains, chain1, inner, 2)
-
-    print("Beendet: Anzahl Inner Layer $(inner) und 2 hidden Layer")
+    time = @elapsed create_PINN(eq, bcs, domains, chain1, inner, 2)
+    println("Time 2 HiddenLayer + $(inner) Nodes: ", time)
 
 
     #4 hidden layer
@@ -89,9 +88,8 @@ for inner in inner_array
                   FastDense(inner,inner,act_Fkt),
                   FastDense(inner,inner,act_Fkt),
                   FastDense(inner,1))
-    create_PINN(eq, bcs, domains, chain2, inner, 4)
-    
-    print("Beendet: Anzahl Inner Layer $(inner) und 4 hidden Layer")
+    time = @elapsed create_PINN(eq, bcs, domains, chain2, inner, 4)
+    println("Time 4 HiddenLayer + $(inner) Nodes: ", time)
 
     
     #6 hidden layer
@@ -102,11 +100,11 @@ for inner in inner_array
                   FastDense(inner,inner,act_Fkt),
                   FastDense(inner,inner,act_Fkt),
                   FastDense(inner,1))
-    create_PINN(eq, bcs, domains, chain3, inner, 6)
-
-    print("Beendet: Anzahl Inner Layer $(inner) und 6 hidden Layer")
+    time = @elapsed create_PINN(eq, bcs, domains, chain3, inner, 6)
+    println("Time 6 HiddenLayer + $(inner) Nodes: ", time)
 
 end
 
+print("Beendet!")
 
 
