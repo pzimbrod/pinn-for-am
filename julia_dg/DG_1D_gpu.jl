@@ -1,7 +1,7 @@
 using Pkg
 Pkg.activate(".")
 Pkg.instantiate()
-# We implement a calar linear advection equation in 1D with unit velocity
+# We implement a scalar linear advection equation in 1D with unit velocity
 # u_t + u_x = 0
 using CUDA
 
@@ -9,8 +9,8 @@ coordinates_min = -1.0
 coordinates_max = 1.0
 
 # We assume periodic boundaries and the following IC
-# IC(x) = 1.0 + 0.5 * sin(pi*x)
-@. IC(x) = 1.0 * ( x >= -0.5 && x <= 0.5)
+IC(x) = 1.0 + 0.5 * sin(pi*x)
+# @. IC(x) = 1.0 * ( x >= -0.5 && x <= 0.5)
 
 # We create a discretization with some elements
 n_elements = 1024
@@ -129,3 +129,6 @@ sol = solve(ode, RDPK3SpFSAL49(), abstol=1.0e-6, reltol=1.0e-6, save_everystep=f
 using BenchmarkTools
 t = @benchmark CUDA.@sync solve($ode, RDPK3SpFSAL49(), abstol=1.0e-6, reltol=1.0e-6, save_everystep=false)
 print(dump(t))
+
+using Plots
+savefig(plot(sol),"out.png")
