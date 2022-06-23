@@ -188,3 +188,5 @@ Manifest.toml
 *.vtk
 *.vtu
 *.pvd
+
+*.csv
