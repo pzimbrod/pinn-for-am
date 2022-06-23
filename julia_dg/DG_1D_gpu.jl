@@ -9,8 +9,8 @@ coordinates_min = -1.0
 coordinates_max = 1.0
 
 # We assume periodic boundaries and the following IC
-IC(x) = 1.0 + 0.5 * sin(pi*x)
-# @. IC(x) = 1.0 * ( x >= -0.5 && x <= 0.5)
+#IC(x) = 1.0 + 0.5 * sin(pi*x)
+IC(x) = 1.0 * ( x >= -0.5 && x <= 0.5)
 
 # We create a discretization with some elements
 n_elements = 1024
@@ -126,16 +126,18 @@ tspan = (0.0, 2.0)
 ode = ODEProblem(rhs!,u0,tspan,x)
 sol = solve(ode, RDPK3SpFSAL49(), abstol=1.0e-6, reltol=1.0e-6, save_everystep=false)
 
-using DataFrames, CSV
-df = DataFrame(sol)
-CSV.write("solution.csv",df)
-
 using BenchmarkTools
 t = @benchmark CUDA.@sync solve($ode, RDPK3SpFSAL49(), abstol=1.0e-6, reltol=1.0e-6, save_everystep=false)
 BenchmarkTools.save("evaluation.json",t)
 print(dump(t))
 
-using Plots
+# Only postprocessing from here on
 CUDA.allowscalar(true)
+
+using DataFrames, CSV
+df = DataFrame(sol)
+CSV.write("solution.csv",df)
+
+using Plots
 plt = plot(vec(x), vec(sol.u[end]), label="solution at t=$(tspan[2])", legend=:topleft, lw=3);
 savefig(plt,"out.pdf")
