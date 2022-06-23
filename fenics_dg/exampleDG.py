@@ -25,7 +25,7 @@ dt = 0.8 * h/vel
 t_end = 5.0
 
 # Degree of polynomial approximation
-polydeg = 5
+polydeg = 1
 
 # Sub domain for Periodic boundary condition
 class PeriodicBoundary(SubDomain):
@@ -69,6 +69,7 @@ u = interpolate( Constant((vel_x, vel_y)), V_u)
 # Initial condition: alpha = 1 if 2 < (x,y) < 4
 ic = Expression('(2 <= x[0]) * (x[0] <= 4) * (2 <= x[1]) * (x[1] <= 4)',
                 element=V_dg.ufl_element())
+phi_0 = interpolate(ic, V_dg)
 
 # The test function of the weak form
 v = TestFunction(V_dg)
@@ -88,9 +89,9 @@ a_int = dot(grad(v), - u * phi) * dx
 a_vel = dot(jump(v), un('+') * phi('+') - un('-') * phi('-') ) * dS \
 + dot(v, un*phi) * ds
 
-a = a_int + a_vel
+a = dt * a_int + dt * a_vel
 
-L = v * f * dx
+L = phi_0 * v * dx
 
 phi_h = Function(V_dg)
 
@@ -99,10 +100,24 @@ b = assemble(L)
 # Periodic BCs get imposed directly, hence don't need to included into FE assembly
 # bc.apply(A, b)
 
-solve(A, phi_h.vector(), b)
+# solve(A, phi_h.vector(), b)
 
-# Project solution to a continuous function space
-up = project(phi_h, V=V_cg)
+# Generate the output file
+file = File("fenics_dg/exampleDG/scalar_transport.pvd")
 
-file = File("exampleDG/scalar_transport.pvd")
-file << up
+# Time loop
+t = 0.0
+while t <= t_end:
+    
+    up = phi_h
+    file << up
+
+    # Update time
+    t += dt
+    print("time step: "+str(t))
+
+    # linear solve
+    solve(A, phi_h.vector(), b)
+    
+    # Update previous solution
+    phi_0.assign(phi_h)
