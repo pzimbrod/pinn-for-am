@@ -9,7 +9,8 @@ coordinates_min = -1.0
 coordinates_max = 1.0
 
 # We assume periodic boundaries and the following IC
-IC(x) = 1.0 + 0.5 * sin(pi*x)
+# IC(x) = 1.0 + 0.5 * sin(pi*x)
+@. IC(x) = 1.0 * ( x >= -0.5 && x <= 0.5)
 
 # We create a discretization with some elements
 n_elements = 1024
