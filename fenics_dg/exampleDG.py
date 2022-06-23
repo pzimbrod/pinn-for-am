@@ -1,11 +1,28 @@
 from dolfin import *
 
+# Don't receive messages from every subprocess
+parameters["std_out_all_processes"] = False;
+
+# In order to make MPI work, facet information needs to be exchanged
+parameters["ghost_mode"] = "shared_facet" 
+
 # Length of domain in x and y direction
 Lx = 5.0
 Ly = 5.0
 # Number of elements in x and y direction
 Nx = 50
 Ny = 50
+
+# transport velocity
+vel_x = 1.0
+vel_y = 1.0
+vel = sqrt(vel_x+vel_y)
+# grid spacing
+h = min(Lx/Nx, Ly/Ny)
+# Necessary max time step such that CFL = 0.8 (to be conservative)
+dt = 0.8 * h/vel
+# End time
+t_end = 5.0
 
 # Degree of polynomial approximation
 polydeg = 5
@@ -47,7 +64,11 @@ V_cg = FunctionSpace(mesh, "CG", polydeg)
 V_u = VectorFunctionSpace(mesh, "CG", 2)
 
 # project constant, uniform velocity onto function space for u
-u = interpolate( Constant(("1.", "1")), V_u)
+u = interpolate( Constant((vel_x, vel_y)), V_u)
+
+# Initial condition: alpha = 1 if 2 < (x,y) < 4
+ic = Expression('(2 <= x[0]) * (x[0] <= 4) * (2 <= x[1]) * (x[1] <= 4)',
+                element=V_dg.ufl_element())
 
 # The test function of the weak form
 v = TestFunction(V_dg)
