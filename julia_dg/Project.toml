@@ -1,0 +1,8 @@
+[deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
+FastGaussQuadrature = "442a2c76-b920-505d-bb47-c5924d526838"
+Jacobi = "83f21c0b-4282-5fbc-9e3f-f6da3d2e584c"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
