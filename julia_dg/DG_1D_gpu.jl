@@ -128,7 +128,10 @@ sol = solve(ode, RDPK3SpFSAL49(), abstol=1.0e-6, reltol=1.0e-6, save_everystep=f
 
 using BenchmarkTools
 t = @benchmark CUDA.@sync solve($ode, RDPK3SpFSAL49(), abstol=1.0e-6, reltol=1.0e-6, save_everystep=false)
+BenchmarkTools.save("evaluation.json",t)
 print(dump(t))
 
 using Plots
-savefig(plot(sol),"out.png")
+CUDA.allowscalar(true)
+plt = plot(vec(x), vec(sol.u[end]), label="solution at t=$(tspan[2])", legend=:topleft, lw=3)
+savefig(plt,"out.png")
