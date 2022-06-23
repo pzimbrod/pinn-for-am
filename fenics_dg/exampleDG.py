@@ -54,9 +54,7 @@ v = TestFunction(V_dg)
 # The interpolation function for the scalar quantity
 phi = TrialFunction(V_dg)
 
-kappa = Constant(0.0)
 f = Constant(0.0)
-alpha = Constant(5.0)
 
 n = FacetNormal(mesh)
 h = CellDiameter(mesh)
@@ -64,16 +62,12 @@ h_avg = (h('+') + h('-'))/2
 
 un = (dot(u,n) + abs(dot(u,n)))/2.0
 
-a_int = dot(grad(v), kappa*grad(phi) - u * phi) * dx
-
-a_fac = kappa('+') * (alpha('+') / h('+')) * dot(jump(v,n), jump(phi,n)) * dS \
-- kappa('+') * dot(avg(grad(v)), jump(phi, n)) * dS \
-- kappa('+') * dot(jump(v,n), avg(grad(phi))) * dS
+a_int = dot(grad(v), - u * phi) * dx
 
 a_vel = dot(jump(v), un('+') * phi('+') - un('-') * phi('-') ) * dS \
 + dot(v, un*phi) * ds
 
-a = a_int + a_fac + a_vel
+a = a_int + a_vel
 
 L = v * f * dx
 
