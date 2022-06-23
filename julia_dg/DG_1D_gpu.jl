@@ -100,15 +100,6 @@ function rhs!(du,u,x,t)
     @. flux_rl = -0.5 * 1.0 * (u_rl - u_rr)
     @. flux_rr = flux_rl
 
-    #= for i ∈ 2:size(du,2)-1
-        # left interface
-        @views flux_numerical[1,i] = -0.5 * 1.0 * (u[1,i] - u[end,i-1])
-        @views flux_numerical[end,i-1] = flux_numerical[1,i]
-
-        # right interface
-        @views flux_numerical[end,i] = -0.5 * 1.0 * (u[1,i+1] - u[end,i])
-        @views flux_numerical[1,i+1] = flux_numerical[end,i]
-    end =#
     # Boundary flux
     flux_left = view(flux_numerical, 1,1)
     flux_right = view(flux_numerical, size(flux_numerical)...)
@@ -116,8 +107,6 @@ function rhs!(du,u,x,t)
     u_right = view(u,size(u)...)
     @. flux_left = -0.5 * 1.0 * (u_left - u_right)
     @. flux_right = flux_left
-    #= @views flux_numerical[1,1] = -0.5 * 1.0 * (u[1,1] - u[end,end])
-    @views flux_numerical[end,end] = flux_numerical[1,1] =#
     
     # Calculate surface integrals
     du -= (M \ B) * flux_numerical
