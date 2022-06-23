@@ -1,9 +1,14 @@
 from dolfin import *
 
-# Length of domain in x direction
+# Length of domain in x and y direction
 Lx = 5.0
-# Length of domain in y direction
 Ly = 5.0
+# Number of elements in x and y direction
+Nx = 50
+Ny = 50
+
+# Degree of polynomial approximation
+polydeg = 5
 
 # Sub domain for Periodic boundary condition
 class PeriodicBoundary(SubDomain):
@@ -29,18 +34,19 @@ class PeriodicBoundary(SubDomain):
 periodic_boundary = PeriodicBoundary()
 
 #mesh = UnitSquareMesh(64,64)
-mesh = RectangleMesh(Point(0,0),Point(Lx,Ly),100,100)
+mesh = RectangleMesh.create([Point(0,0),Point(Lx,Ly)],[Nx,Ny],CellType.Type.quadrilateral)
 
 # Discontinuous function space for the scalar quantity
-V_dg = FunctionSpace(mesh, "DG", 5, constrained_domain=periodic_boundary)
+V_dg = FunctionSpace(mesh, "DG", polydeg, constrained_domain=periodic_boundary)
 
 # Continuous function space for postprocessing
-V_cg = FunctionSpace(mesh, "CG", 5)
+V_cg = FunctionSpace(mesh, "CG", polydeg)
 
 # Advection velocity is a vector, hence a separate vector space is needed
+# dim = 2
 V_u = VectorFunctionSpace(mesh, "CG", 2)
 
-# Constant, uniform velocity
+# project constant, uniform velocity onto function space for u
 u = interpolate( Constant(("1.", "1")), V_u)
 
 # The test function of the weak form
@@ -71,14 +77,12 @@ a = a_int + a_fac + a_vel
 
 L = v * f * dx
 
-g = Expression("sin(pi*5.0*x[1])", element = V_dg.ufl_element())
-#bc = DirichletBC(V_dg, g, Boundary(), "geometric")
-
 phi_h = Function(V_dg)
 
 A = assemble(a)
 b = assemble(L)
-bc.apply(A, b)
+# Periodic BCs get imposed directly, hence don't need to included into FE assembly
+# bc.apply(A, b)
 
 solve(A, phi_h.vector(), b)
 
